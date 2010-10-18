@@ -1,5 +1,5 @@
 <?php
-function post_xsd(){
+function update_xsd(){
 	$xsd = array();
 	$i=0;
 	$data_a=array();
@@ -15,20 +15,22 @@ function post_xsd(){
 	$i=0;
 	$xsd['request'][$i]['items']['data'] = $data;
 	$xsd['request'][$i]['items']['objname'] = 'var';
-	$xsd['response'][] = array("name" => "insert_id", "type" => "double");
+	$xsd['response'][] = array("name" => "result", "type" => "double");
 	
 	return $xsd;
-}
-
-function post_wsdl(){
 
 }
 
-function post_wsdl_service(){
+function update_wsdl(){
 
 }
+
+function update_wsdl_service(){
+
+}
+
 // Define the method as a PHP function
-function post($var) {
+function update($var) {
 	global $xoopsModuleConfig;
 	if ($xoopsModuleConfig['site_user_auth']==1){
 		if ($ret = check_for_lock(basename(__FILE__),$username,$password)) { return $ret; }
@@ -46,23 +48,32 @@ function post($var) {
 		return array('ErrNum'=> 2, "ErrDesc" => 'Table Name or Table ID not specified');
 	}
 
-	if (!validate($tbl_id,$var['data'], "allowpost")){
-		return array('ErrNum'=> 1, "ErrDesc" => 'Not all fields are allowed posting');
+	if (!validate($tbl_id,$var['data'], "allowupdate")){
+		return array('ErrNum'=> 5, "ErrDesc" => 'Not all fields are allowed update');
 	} else {
-		$sql = "INSERT INTO ".$xoopsDB->prefix(get_tablename($tbl_id));
+		$sql = "UPDATE ".$xoopsDB->prefix(get_tablename($tbl_id)).' SET ';
 		foreach ($var['data'] as $data){
-			$sql_b .= "`". $data['field']."`,";
-			$sql_c .= "'". addslashes($data['value'])."',";
+			if (!is_fieldkey($data['field'], $tbl_id)){
+				$sql_b .= "`". $data['field']."` = '". addslashes($data['value'])."',";
+			} else {
+				if (strpos(' '.$data['value'],'%')>0||strpos(' '.$data['value'],'_')>0)
+					return array('ErrNum'=> 7, "ErrDesc" => 'Wildcard not accepted');
+				if (strpos(' '.strtolower($data['value']),'union')>0)
+					return array('ErrNum'=> 8, "ErrDesc" => 'Union not accepted');				
+				$sql_c .= " WHERE `". $data['field']."` = '". addslashes($data['value'])."'";
+			}
 		}
+		if (strlen($sql_c)==0)
+			return array('ErrNum'=> 6, "ErrDesc" => 'No primary key set');
+
 		global $xoopsModuleConfig;
 		if ($xoopsModuleConfig['site_user_auth']==1){
 			if (!validateuser($var['username'],$var['password']))
 				return false;
 		}
-//		echo $sql." (".substr($sql_b,0,strlen($str_b)-1).") VALUES (".substr($sql_c,0,strlen($str_c)-1).")";
-		$rt = $xoopsDB->queryF($sql." (".substr($sql_b,0,strlen($str_b)-1).") VALUES (".substr($sql_c,0,strlen($str_c)-1).")");
-		return array("insert_id" => $xoopsDB->getInsertId($rt));
+		return $xoopsDB->queryF($sql.substr($sql_b,0,strlen($sql_b)-1).$sql_c);
 	}
 
 }
+
 ?>

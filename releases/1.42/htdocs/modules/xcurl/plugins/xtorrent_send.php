@@ -6,7 +6,7 @@
 		require (XOOPS_ROOT_PATH.'/modules/xtorrent/class/qcp71.class.php');
 	}
 
-	function xtorrent_crc_xsd(){
+	function xtorrent_send_xsd(){
 		$xsd = array();
 		$i=0;
 		$xsd['request'][$i] = array("name" => "username", "type" => "string");
@@ -24,46 +24,77 @@
 		$i=0;
 		$xsd['response'][$i] = array("name" => "ERRNUM", "type" => "integer");
 		$data_b = array();
-			$data_b[] = array("name" => "id", "type" => "integer");
-			$data_b[] = array("name" => "torrent", "type" => "integer");
-			$data_b[] = array("name" => "peer_id", "type" => "string");		
-			$data_b[] = array("name" => "ip", "type" => "string");
-			$data_b[] = array("name" => "port", "type" => "string");
-			$data_b[] = array("name" => "uploaded", "type" => "integer");
-			$data_b[] = array("name" => "downloaded", "type" => "string");
-			$data_b[] = array("name" => "to_go", "type" => "string");
-			$data_b[] = array("name" => "seeder", "type" => "integer");
-			$data_b[] = array("name" => "started", "type" => "string");
-			$data_b[] = array("name" => "last_action", "type" => "integer");
-			$data_b[] = array("name" => "connectable", "type" => "integer");
-			$data_b[] = array("name" => "userid", "type" => "integer");		
-			$data_b[] = array("name" => "agent", "type" => "string");
-			$data_b[] = array("name" => "finishedat", "type" => "double");
-			$data_b[] = array("name" => "downloadoffset", "type" => "integer");
-			$data_b[] = array("name" => "uploadoffset", "type" => "integer");		
+			$data_b[] = array("name" => "lid", "type" => "integer");
+			$data_b[] = array("name" => "cid", "type" => "integer");
+			$data_b[] = array("name" => "title", "type" => "string");		
+			$data_b[] = array("name" => "homepage", "type" => "string");
+			$data_b[] = array("name" => "version", "type" => "string");
+			$data_b[] = array("name" => "size", "type" => "integer");
+			$data_b[] = array("name" => "platform", "type" => "string");
+			$data_b[] = array("name" => "screenshot", "type" => "string");
+			$data_b[] = array("name" => "submitter", "type" => "integer");
+			$data_b[] = array("name" => "publisher", "type" => "string");
+			$data_b[] = array("name" => "status", "type" => "integer");
+			$data_b[] = array("name" => "date", "type" => "integer");
+			$data_b[] = array("name" => "hits", "type" => "integer");		
+			$data_b[] = array("name" => "user_icq", "type" => "string");
+			$data_b[] = array("name" => "rating", "type" => "double");
+			$data_b[] = array("name" => "votes", "type" => "integer");
+			$data_b[] = array("name" => "comments", "type" => "integer");		
+			$data_b[] = array("name" => "license", "type" => "string");
+			$data_b[] = array("name" => "mirror", "type" => "string");
+			$data_b[] = array("name" => "price", "type" => "string");
+			$data_b[] = array("name" => "paypalemail", "type" => "string");		
+			$data_b[] = array("name" => "features", "type" => "string");
+			$data_b[] = array("name" => "requirements", "type" => "string");
+			$data_b[] = array("name" => "homepagetitle", "type" => "string");
+			$data_b[] = array("name" => "forumid", "type" => "integer");
+			$data_b[] = array("name" => "limitations", "type" => "string");											
+			$data_b[] = array("name" => "published", "type" => "integer");
+			$data_b[] = array("name" => "expired", "type" => "integer");
+			$data_b[] = array("name" => "offline", "type" => "integer");
+			$data_b[] = array("name" => "description", "type" => "string");
+			$data_b[] = array("name" => "currency", "type" => "string");	
+			$data_b[] = array("name" => "crc", "type" => "string");		
 
 		$data_c = array();
-		$data_c[] = array("name" => "crc", "type" => "string");		
-		$data_c[] = array("name" => "lid", "type" => "string");		
+		$data_c[] = array("name" => "benc", "type" => "string");		
 		$data[] = array("items" => array("data" => $data_b, "objname" => "content"));
-		$data[] = array("items" => array("data" => $data_c, "objname" => "crc"));		
+		$data[] = array("items" => array("data" => $data_c, "objname" => "benc"));		
 		$data[] = array("name" => "skey", "type" => "string");
-		
+
 		$xsd['response'][$i]['items']['data'] = $data;
 		$xsd['response'][$i]['items']['objname'] = 'RESULT';
+
+		$i++;
+		$xsd['response'][$i] = array("name" => "skey", "type" => "string");
+		$i++;
+		$xsd['response'][$i] = array("name" => "sitename", "type" => "string");
+		$i++;
+		$xsd['response'][$i] = array("name" => "adminemail", "type" => "string");
+		$i++;
+		$xsd['response'][$i] = array("name" => "xoops_url", "type" => "string");
 		
+		$data = array();
+			$data[] = array("name" => "platform", "type" => "string");
+			$data[] = array("name" => "license", "type" => "string");											
+			$data[] = array("name" => "status", "type" => "integer");
+		$i++;
+		
+		$xsd['response'][$i]['items']['data'] = $data;
+		$xsd['response'][$i]['items']['objname'] = 'arrays';		
 		return $xsd;
 	}
 	
-	function xtorrent_crc_wsdl(){
+	function xtorrent_send_wsdl(){
 	
 	}
 	
-	function xtorrent_crc_wsdl_service(){
+	function xtorrent_send_wsdl_service(){
 	
 	}
 	
-	function xtorrent_crc($username, $password, $passhash, $rand, $time, $request)
+	function xtorrent_send($username, $password, $passhash, $rand, $time, $request)
 	{	
 		global $xoopsModule, $xoopsDB;
 		
@@ -117,24 +148,86 @@
 			{
 						
 				ini_set('allow_url_fopen',true);
+				$passkey = passkey_paypal($lid, $username, $password);
+
+
+				// Begin Download
+				
 				$fn = str_replace(XOOPS_URL, XOOPS_ROOT_PATH, $url);
+				$crc = sha1_file($url);
 				$dict = bdec_file($fn, (1024*1024));
-				$row[] = array("content" => $rrow, "crc" => array("lid" => $rrow['lid'],
-															      "crc" => sha1(benc($dict))));
+
+				if (empty($dict['value']['announce'])){
+					$dict['value']['announce']['type'] = "string";
+					$dict['value']['announce']['value'] = str_replace('{XOOPS_URL}', XOOPS_URL, $xTorrentConfig['announce_url'])."?passkey=$passkey";
+					$dict['value']['announce']['string'] = strlen($dict['value']['announce']['value']).":".$dict['value']['announce']['value'];
+					$dict['value']['announce']['strlen'] = strlen($dict['value']['announce']['string']);
+				} else {
+					$tracker = array();
+					$buffer = array();					
+					$tracker['type'] = "list";
+					$buffer['type'] = "string";
+					$buffer['value'] = str_replace('{XOOPS_URL}', XOOPS_URL, $xTorrentConfig['announce_url'])."?passkey=$passkey";
+					if (!empty($dict['value']['announce-list'])){
+						
+						$buffer['string'] = strlen($buffer['value']).":".$buffer['value'];
+						$buffer['strlen'] = strlen($buffer['string']);
+						$tracker['value'] = array($buffer);
+						$tracker['string'] = "l".$buffer['string']."e";
+						$tracker['strlen'] = strlen($tracker['string']);
+						$dict['value']['announce-list']['value'][count($dict['value']['announce-list']['value'])] = $tracker;
+						$dict['value']['announce-list']['string'] = substr($dict['value']['announce-list']['string'],0,strlen($dict['value']['announce-list']['string'])-2)."l".$buffer['string']."ee";
+						$dict['value']['announce-list']['strlen'] = strlen($dict['value']['announce-list']['string']);
+					} else {
+						$dict['value']['announce-list']['type'] = "list";
+						$buffer2 = array();
+						
+						$buffer2['type'] = "string";
+						$buffer2['string'] = strlen($dict['value']['announce']['value']).":".$dict['value']['announce']['value'];
+						$buffer2['value'] = $dict['value']['announce']['value'];
+						$buffer2['strlen'] = strlen($buffer2['string']);
+						$tracker['value'] = array($buffer2);
+						$tracker['string'] = "l".$buffer2['string']."e";
+						$tracker['strlen'] = strlen($tracker['string']);
+						$dict['value']['announce-list']['value'][count($dict['value']['announce-list']['value'])] = $tracker;
+						
+						$buffer['string'] = strlen($buffer['value']).":".$buffer['value'];
+						$buffer['strlen'] = strlen($buffer['string']);
+						$tracker['value'] = array($buffer);
+						$tracker['string'] = "l".$buffer['string']."e";
+						$tracker['strlen'] = strlen($tracker['string']);
+						
+						$dict['value']['announce-list']['value'][count($dict['value']['announce-list']['value'])] = $tracker;
+						$dict['value']['announce-list']['string'] = "ll".$buffer2['string']."".$buffer['string']."ee";
+						$dict['value']['announce-list']['strlen'] = strlen($dict['value']['announce-list']['string']);
+					}							
+					//@array_walk($rrow, "walk_uuencode");
+					$rrow['crc'] = $crc;
+					$row['data'][] = array("content" => $rrow,
+	 						         	   "benc" => convert_uuencode(benc($dict)));
+				}
 			}
 		}
-		
 				
 		if (!empty($row)){
 			$row['skey'] = $xTorrentConfig['response_key'];
+			$row['sitename'] = $xoopsConfig['sitename'];
+			$row['adminemail'] = $xoopsConfig['adminemail'];
+			
+			$row['xoops_url'] = sprintf("%s",XOOPS_URL);
+			
+			$row['arrays']['platform'] = $xTorrentConfig['platform'];
+			$row['arrays']['license'] = $xTorrentConfig['license'];
+			$row['arrays']['status'] = $xTorrentConfig['status'];
 			return array("ERRNUM" => 1, "RESULT" => $row);
 		} else {
 			return array("ERRNUM" => 3, "ERRTXT" => _ERR_FUNCTION_FAIL);
 		}				
 
 	}
-	
-	function passkey_paypal($lid, $uname, $pass)
+	if (!function_exists('passkey_paypal'))
+	{
+		function passkey_paypal($lid, $uname, $pass)
 		{
 		
 			global $xoopsUser, $xoopsDB, $xoopsModuleConfig, $myts;
@@ -232,7 +325,10 @@
 			return $passkey;
 		
 		}
-
+	}
+	
+	if (!function_exists('xtorrent_get_base_domain'))
+	{
 		function xtorrent_get_base_domain($url) 
 		{
 		  
@@ -290,10 +386,13 @@
 		  // did we succeed?  
 		  return $domain;
 		} 
-
+	}
+	
+	if (!function_exists("walk_uuencode"))
+	{
 		function walk_uuencode(&$item1, $key, $prefix)
 		{
 			$item1 = convert_uuencode($item1);
 		}
-	
+	}
 ?>

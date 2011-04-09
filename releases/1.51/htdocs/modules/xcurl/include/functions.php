@@ -1,20 +1,4 @@
 <?php
-function object2array($object) {
-  if (is_object($object)) {
-    foreach ($object as $key => $value) {
-    	if (is_object($value)) {
-    		$array[$key] = object2array($value);
-    	} else {
-    		$array[$key] = $value;
-    	}
-    }
-  }
-  else {
-    $array = $object;
-  }
-
-  return $array;
-}
 
 if (!function_exists("adminMenu")) {
   function adminMenu ($currentoption = 0)  {

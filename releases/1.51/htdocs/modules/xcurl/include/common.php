@@ -1,7 +1,7 @@
 <?php
 function validateuser($username, $password){
 	global $xoopsDB;
-	$sql = "select * from ".$xoopsDB->prefix('users'). " WHERE uname = '$username' and pass = md5('$password')";
+	$sql = "select * from ".$xoopsDB->prefix('users'). " WHERE uname = '$username' and pass = ".(strlen($password)==32&&strtolower($password)==$password?"'$password'":"md5('$password')");
 	$ret = $xoopsDB->query($sql);
 	if (!$xoopsDB->getRowsNum($ret)) {
 		return false;
@@ -12,7 +12,7 @@ function validateuser($username, $password){
 
 function user_uid($username, $password){
 	global $xoopsDB;
-	$sql = "select uid from ".$xoopsDB->prefix('users'). " WHERE uname = '$username' and pass = md5('$password')";
+	$sql = "select uid from ".$xoopsDB->prefix('users'). " WHERE uname = '$username' and pass = ".(strlen($password)==32&&strtolower($password)==$password?"'$password'":"md5('$password')");
 	$ret = $xoopsDB->query($sql);
 	if (!$xoopsDB->getRowsNum($ret)) {
 		return false;
@@ -44,6 +44,8 @@ function validate($tbl_id, $data, $function){
 
 function checkright($function_file, $username, $password){
 	$uid = user_uid($username,$password);
+	$module_handler = xoops_gethandler('module');
+	$xoModule = $module_handler->getByDirname('xcurl');
 	if ($uid <> 0){
 		global $xoopsDB, $xoopsModule;
 		$rUser = new XoopsUser($uid);
@@ -53,7 +55,7 @@ function checkright($function_file, $username, $password){
 		$ret = $xoopsDB->queryF($sql);
 		$row = $xoopsDB->fetchArray($ret);
 		$item_id = $row['plugin_id'];
-		$modid = $xoopsModule->getVar('mid');
+		$modid = $xoModule->getVar('mid');
 		$online_handler =& xoops_gethandler('online');
 		$online_handler->write($uid, $username, time(), $modid, (string)$_SERVER["REMOTE_ADDR"]);
 		return $gperm_handler->checkRight('plugin_call',$item_id,$groups, $modid);
@@ -65,7 +67,7 @@ function checkright($function_file, $username, $password){
 		$ret = $xoopsDB->queryF($sql);
 		$row = $xoopsDB->fetchArray($ret);
 		$item_id = $row['plugin_id'];
-		$modid = $xoopsModule->getVar('mid');
+		$modid = $xoModule->getVar('mid');
 		return $gperm_handler->checkRight('plugin_call',$item_id,$groups, $modid);
 	}
 }

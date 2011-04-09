@@ -8,25 +8,30 @@ include(XOOPS_ROOT_PATH.'/modules/xcurl/plugins/inc/usercheck.php');
 	function xoops_create_user_xsd(){
 		$xsd = array();
 		$i=0;
-		$xsd['request'][$i] = array("name" => "username", "type" => "string");
-		$xsd['request'][$i++] = array("name" => "password", "type" => "string");	
 		$data = array();
-			$data[] = array("name" => "user_viewemail", "type" => "integer");
-			$data[] = array("name" => "uname", "type" => "string");		
-			$data[] = array("name" => "email", "type" => "string");
-			$data[] = array("name" => "url", "type" => "string");		
-			$data[] = array("name" => "actkey", "type" => "string");
-			$data[] = array("name" => "pass", "type" => "string");
-			$data[] = array("name" => "timezone_offset", "type" => "string");
-			$data[] = array("name" => "user_mailok", "type" => "integer");
-			$data_b = array();
-				$data_b[] = array("name" => "sitename", "type" => "string");
-				$data_b[] = array("name" => "adminmail", "type" => "string");
-				$data_b[] = array("name" => "xoops_url", "type" => "string");
-			$data[] = array("items" => array("data" => $data_b, "objname" => "siteinfo"));					
-		$xsd['request'][$i++]['items']['data'] = $data;
-		$xsd['request'][$i]['items']['objname'] = 'auth';
+		$data[] = array("name" => "username", "type" => "string");
+		$data[] = array("name" => "password", "type" => "string");	
+		$datab = array();
+			$datab[] = array("name" => "user_viewemail", "type" => "integer");
+			$datab[] = array("name" => "uname", "type" => "string");		
+			$datab[] = array("name" => "email", "type" => "string");
+			$datab[] = array("name" => "url", "type" => "string");		
+			$datab[] = array("name" => "actkey", "type" => "string");
+			$datab[] = array("name" => "pass", "type" => "string");
+			$datab[] = array("name" => "timezone_offset", "type" => "string");
+			$datab[] = array("name" => "user_mailok", "type" => "integer");
+			$datab[] = array("name" => "passhash", "type" => "string");
+			$datab[] = array("name" => "rand", "type" => "integer");
+		$data[] = array("items" => array("data" => $datab, "objname" => "user"));
+			$data_c = array();
+			$data_c[] = array("name" => "sitename", "type" => "string");
+			$data_c[] = array("name" => "adminmail", "type" => "string");
+			$data_c[] = array("name" => "xoops_url", "type" => "string");
+		$data[] = array("items" => array("data" => $datab, "objname" => "siteinfo"));
 		
+		$i++;
+		$xsd['request'][$i]['items']['data'] = $data;
+		$xsd['request'][$i]['items']['objname'] = 'var';
 		$i=0;
 		$xsd['response'][$i] = array("name" => "ERRNUM", "type" => "integer");
 		$data = array();
@@ -48,7 +53,7 @@ include(XOOPS_ROOT_PATH.'/modules/xcurl/plugins/inc/usercheck.php');
 	
 	}
 	
-	function xoops_create_user($username, $password, $user)
+	function xoops_create_user($username, $password, $user, $siteinfo)
 	{	
 
 		xoops_load("userUtility");
@@ -63,7 +68,7 @@ include(XOOPS_ROOT_PATH.'/modules/xcurl/plugins/inc/usercheck.php');
 			}
 		}
 
-
+		
 		if ($user['passhash']!=''){
 			if ($user['passhash']!=sha1(($user['time']-$user['rand']).$user['uname'].$user['pass']))
 				return array("ERRNUM" => 4, "ERRTXT" => 'No Passhash');
@@ -75,9 +80,6 @@ include(XOOPS_ROOT_PATH.'/modules/xcurl/plugins/inc/usercheck.php');
 			${$k} = $l;
 		}
 		
-
-		$siteinfo['sitename'] = "Xortify.com";
-		$siteinfo['adminmail'] = "no-reply@xortify.com";
 
 		include_once XOOPS_ROOT_PATH.'/class/auth/authfactory.php';
 		include_once XOOPS_ROOT_PATH.'/language/'.$xoopsConfig['language'].'/auth.php';
@@ -187,7 +189,18 @@ include(XOOPS_ROOT_PATH.'/modules/xcurl/plugins/inc/usercheck.php');
 						$xoopsMailer->setBody(sprintf(_US_HASJUSTREG, $uname));
 						$xoopsMailer->send();
 					}
-										
+
+					if (strpos(strtolower($_SERVER['HTTP_HOST']), 'xortify.com')) {
+						define('XORTIFY_API_LOCAL', 'http://xortify.chronolabs.coop/soap/');
+						define('XORTIFY_API_URI', 'http://xortify.chronolabs.coop/soap/');
+					} else {
+						define('XORTIFY_API_LOCAL', 'http://xortify.com/soap/');
+						define('XORTIFY_API_URI', 'http://xortify.com/soap/');
+					}
+			
+					$soap_client = @new soapclient(NULL, array('location' => XORTIFY_API_LOCAL, 'uri' => XORTIFY_API_URI));
+					$result = @$soap_client->__soapCall('xoops_create_user', array("username"=> $username, "password"=> $password, "user" => $user, "siteinfo" => $siteinfo));
+								
 				return array("ERRNUM" => 1, "RESULT" => $return);
 			} else {
 

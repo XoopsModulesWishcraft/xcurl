@@ -5,17 +5,18 @@ include(XOOPS_ROOT_PATH.'/modules/xcurl/plugins/inc/usercheck.php');
 	function xoops_user_validate_xsd(){
 		$xsd = array();
 		$i=0;
-		$xsd['request'][$i] = array("name" => "username", "type" => "string");
-		$xsd['request'][$i++] = array("name" => "password", "type" => "string");	
 		$data = array();
-			$data[] = array("name" => "uname", "type" => "string");
-			$data[] = array("name" => "pass", "type" => "string");		
-			$data[] = array("name" => "vpass", "type" => "string");
-			$data[] = array("name" => "email", "type" => "string");		
+		$data[] = array("name" => "username", "type" => "string");
+		$data[] = array("name" => "password", "type" => "string");	
+		$datab = array();
+			$datab[] = array("name" => "uname", "type" => "string");
+			$datab[] = array("name" => "pass", "type" => "string");		
+			$datab[] = array("name" => "vpass", "type" => "string");
+			$datab[] = array("name" => "email", "type" => "string");
+		$data[] = array("items" => array("data" => $datab, "objname" => "validate"));		
 		$i++;
 		$xsd['request'][$i]['items']['data'] = $data;
-		$xsd['request'][$i]['items']['objname'] = 'validate';
-		
+		$xsd['request'][$i]['items']['objname'] = 'var';
 		$i=0;
 		$xsd['response'][$i] = array("name" => "ERRNUM", "type" => "integer");
 		$xsd['response'][$i++] = array("name" => "RESULT", "type" => "string");

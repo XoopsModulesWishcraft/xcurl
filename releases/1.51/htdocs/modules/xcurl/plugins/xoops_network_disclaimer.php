@@ -4,9 +4,12 @@ include(XOOPS_ROOT_PATH.'/modules/xcurl/plugins/inc/authcheck.php');
 	function xoops_network_disclaimer_xsd(){
 		$xsd = array();
 		$i=0;
-		$xsd['request'][$i] = array("name" => "username", "type" => "string");
-		$xsd['request'][$i++] = array("name" => "password", "type" => "string");	
-
+		$data = array();
+		$data[] = array("name" => "username", "type" => "string");
+		$data[] = array("name" => "password", "type" => "string");	
+		$i++;
+		$xsd['request'][$i]['items']['data'] = $data;
+		$xsd['request'][$i]['items']['objname'] = 'var';
 		
 		$i=0;
 		$xsd['response'][$i] = array("name" => "ERRNUM", "type" => "integer");

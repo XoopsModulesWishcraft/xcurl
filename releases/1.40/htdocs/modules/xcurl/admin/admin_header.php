@@ -1,6 +1,6 @@
 <?php
 /**
- * $Id: admin_header.php v 1.13 06 july 2004 Catwolf Exp $
+ * $Id$
  * Module: WF-Downloads
  * Version: v2.0.5a
  * Release Date: 26 july 2004
